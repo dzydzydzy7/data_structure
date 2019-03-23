@@ -1,0 +1,227 @@
+// 数组的相关操作.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+//
+
+#include "pch.h"
+#include<iostream>
+
+using namespace std;
+template<class T>
+class TArray
+{
+private:
+	int length;
+	int capacity;
+	T *list;
+public:
+	TArray() {};
+	TArray(int capacity)
+	{
+		length = 0;
+		this->capacity = capacity;
+		list = new T[capacity];
+	}
+	int getlength()
+	{
+		return this->length;
+	}
+	int getcapacity()
+	{
+		return this->capacity;
+	}
+	T getlist()
+	{
+		return this->list;
+	}
+
+	//写入数据
+	void add_data(T data)
+	{
+		if (length == capacity)
+			this->expand();
+		list[length] = data;
+		length++;
+	}
+
+
+	//数组扩容
+	void expand()
+	{
+		T *newlist = new T[capacity * 2];
+		for (int i = 0; i < capacity; i++)
+		{
+			newlist[i] = list[i];
+		}
+		list = newlist;
+		capacity *= 2;
+	}
+
+	//数组缩容
+	void shrink()
+	{
+		T *newlist = new T[capacity / 2];
+		for (int i = 0; i < length; i++)
+		{
+			newlist[i] = list[i];
+		}
+		list = newlist;
+		capacity /= 2;
+	}
+
+
+	//插入数据
+	void insert_data(int p, T data)
+	{
+
+		for (int i = length; i > p; i--)
+		{
+			list[i] = list[i - 1];
+		}
+		list[p-1] = data;
+		length++;
+		if (length == capacity)
+			this->expand();
+	}
+	//删除数据
+	void delete_data(int p)
+	{
+		for (int i = p - 1; i < capacity; i++)
+		{
+			list[i] = list[i + 1];
+		}
+		//list[capacity - 1] = NULL;
+		length--;
+		if (length * 2 < capacity)
+			this->shrink();
+	}
+
+
+	//按位置搜索值
+	void pos_search(int p)
+	{
+		cout << "位置" << p << "的值为： " << list[p - 1] << endl;
+	}
+
+	//按值搜索位置
+	void ele_search(T ele)
+	{
+		int flag = 0;
+		for (int i = 0; i < length; i++)
+		{
+			if (list[i] == ele)
+			{
+				cout << ele << " 该元素在位置 " << i + 1 << endl;
+				flag++;
+			}
+		}
+		
+	}
+	//按位置修改数据
+	void pos_change(int p, T data)
+	{
+		list[p - 1] = data;
+		cout << "把位置" << p << "的值改为： " << list[p - 1] << endl;
+	}
+	//按值修改数据
+	void ele_change(T ele1, T ele2)
+	{
+		int flag = 0;
+		for (int i = 0; i < length; i++)
+		{
+			if (list[i] == ele1)
+			{
+				list[i] = ele2;
+				cout << "把" << ele1 << "改为 " << list[i] << endl;
+				flag++;
+			}
+			
+		}
+	}
+
+
+	void print()
+	{
+		for (int i = 0; i < length; i++)
+			cout << list[i] << " ";
+		cout << endl;
+	}
+};
+
+	int main()
+	{
+		int len;
+		cout << "输入原始数组长度: " << endl;
+		cin >> len;
+		TArray<int>Array(len);
+
+		//写入元素
+		int numbers;
+		cout << "往数组中输入数据: " << endl;
+		for (int i = 0; i <len; i++)
+		{
+			cin >> numbers;
+			Array.add_data(numbers);
+		}
+		cout << "数组中元素为: ";
+		Array.print();
+		cout << endl;
+
+		//按位置插入数据
+		cout << "在某位置插入新的数据： " << endl;
+		int pos;
+		int data;
+		cin >> pos >> data;
+		
+		Array.insert_data(pos, data);
+		cout << "新的数组为元素为: ";
+		Array.print();
+		cout << endl;
+
+		//按位置删除数据
+		cout <<"将某位置的元素删除： " << endl;
+		cin >> pos;
+		
+		Array.delete_data(pos);
+		cout << "新的数组为元素为: ";
+		Array.print();
+		cout << endl;
+
+		//按位置搜索值
+		cout << "输入要查找的位置：";
+		cin >> pos;
+		Array.pos_search(pos);
+		cout << endl;
+
+		//按值搜索位置
+		cout << "输入要查找位置的值：";
+		cin >> data;
+		Array.ele_search(data);
+		cout << endl;
+
+		//按位置修改数据
+		cout << "输入要修改的位置和值：";
+		cin >> pos >> data;
+		Array.pos_change(pos, data);
+		Array.print();
+		cout << endl;
+
+		//按值修改数据
+		cout << "将某个值修改为：";
+		int ele;
+		cin >> data >> ele;
+		Array.ele_change(data, ele);
+		Array.print();
+		cout << endl;
+		return 0;
+	}
+
+
+	// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
+	// 调试程序: F5 或调试 >“开始调试”菜单
+
+	// 入门提示: 
+	//   1. 使用解决方案资源管理器窗口添加/管理文件
+	//   2. 使用团队资源管理器窗口连接到源代码管理
+	//   3. 使用输出窗口查看生成输出和其他消息
+	//   4. 使用错误列表窗口查看错误
+	//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
+	//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
