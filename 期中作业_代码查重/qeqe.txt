@@ -1,0 +1,31 @@
+#include <iostream>//614 董泽宇
+using namespace std;
+int num = 0;
+int queue[8] = {0,0,0,0,0,0,0,0};//数据结构使用了一维数组
+void eightQueue(int line)//已经放了line行
+{
+	if(line == 8){ //递归边界，八行都放满就返回
+		num++;
+		return;
+	}
+	for (int i = 0, j = 0; i < 8; ++i)//放第line+1行, i代表下一行的皇后
+	{
+		for (j = 0; j < line; ++j)//j代表前line行的某个皇后
+			//如果(新的i在以前的j下面||i在j的右下对角线||i在j的左下对角线) 都不成立
+			if((queue[j] == i)||(line - j == i - queue[j])||(line - j == queue[j] - i))
+				break;
+		if(j == line)//反之可以放在第line行第i列
+		{
+			queue[line] = i;//记录第line行皇后位置
+			eightQueue(line + 1);//放第line+1行的皇后
+		}
+	}
+	
+}
+
+int main(int argc, char const *argv[])
+{
+	eightQueue(0);//放了0行，即从第一行开始
+	cout<<num<<endl;
+	return 0;
+}
